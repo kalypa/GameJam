@@ -229,6 +229,9 @@ MonoBehaviour:
   m_Name:
   m_EditorClassIdentifier:
   poolingObjectPrefab: {fileID: 5577445891783247116, guid: 36fa6651ac8631247aae80f163548640, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  poolingObjectPrefab: {fileID: 4865895283242784226, guid: 53a1eb1e354fc644583d1ed6f77a0d12, type: 3}
 --- !u!4 &383856203
 Transform:
   m_ObjectHideFlags: 0
@@ -342,6 +345,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10c5f460e2e600a419c09f741d9c4181, type: 3}
   m_Name:
   m_EditorClassIdentifier:
+  m_Name:
+  m_EditorClassIdentifier:
+  staminaBar: {fileID: 1348930857}
+  stamina: {fileID: 1348930858}
+  towerSpawner: {fileID: 1548712275}
 --- !u!114 &583894070
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -908,7 +916,7 @@ MonoBehaviour:
   m_Name:
   m_EditorClassIdentifier:
   staminaBar: {fileID: 1348930857}
-  Spd: 1
+  Spd: 0.05
 --- !u!1 &1536705062
 GameObject:
   m_ObjectHideFlags: 0
@@ -1039,6 +1047,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c70875407699832489b6d37ca666113e, type: 3}
   m_Name:
   m_EditorClassIdentifier:
+  m_Name:
+  m_EditorClassIdentifier:
+  count: 0
+  height: 3.1
+  towerList:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!4 &1548712276
 Transform:
   m_ObjectHideFlags: 0
