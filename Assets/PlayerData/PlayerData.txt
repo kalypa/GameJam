@@ -1,0 +1,1 @@
+{"playerMoney":500,"highScore":0,"itemBuyData":[],"itemUseData":[]}
