@@ -11,12 +11,18 @@ public class Player : MonoBehaviour
     private StaminaBar stamina;
     [SerializeField]
     private TowerSpawner towerSpawner;
+    [SerializeField]
+    private AtkEffect atkEffect;
+    [SerializeField]
+    private CameraShake cameraShake;
     DragManager dragManager;
+
     void Awake()
     {
         dragManager = GetComponent<DragManager>();
         dragManager.setOnSwipeDetected(MyOnSwipeDetected);
     }
+
     void MyOnSwipeDetected(Vector3 swipeDirection)
     {
         if(swipeDirection.x != 0 || swipeDirection.y != 0)
@@ -28,6 +34,8 @@ public class Player : MonoBehaviour
                 {
                     PoolManager.ReturnObject(towerSpawner.towerList[0]);
                     towerSpawner.towerList.Remove(towerSpawner.towerList[0]);
+                    atkEffect.Effect();
+                    cameraShake.Shake();
                     staminaBar.value -= 1;
                     stamina.Spd += 0.01f;
                     --towerSpawner.count;
@@ -44,6 +52,8 @@ public class Player : MonoBehaviour
                 {
                     PoolManager.ReturnObject(towerSpawner.towerList[0]);
                     towerSpawner.towerList.Remove(towerSpawner.towerList[0]);
+                    atkEffect.Effect();
+                    cameraShake.Shake();
                     staminaBar.value -= 1;
                     stamina.Spd += 0.01f;
                     --towerSpawner.count;
