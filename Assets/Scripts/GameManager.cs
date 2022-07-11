@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Tower : MonoBehaviour
+public class GameManager : MonoSingleton<GameManager>
 {
     void Start()
     {
