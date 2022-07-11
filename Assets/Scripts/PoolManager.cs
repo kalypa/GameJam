@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class PoolManager : MonoSingleton<PoolManager>
 {
-
     [SerializeField]
     private GameObject poolingObjectPrefab; //풀링할 오브젝트
 
