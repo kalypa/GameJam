@@ -1,1 +1,1 @@
-{"playerMoney":0,"highScore":0,"itemBuyData":[],"itemUseData":[]}
+{"playerMoney":0,"highScore":0,"itemBuyData":[true,false,false,false,false],"itemUseData":[true,false,false,false,false],"statusLevel":0}

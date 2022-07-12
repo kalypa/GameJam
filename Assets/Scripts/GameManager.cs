@@ -15,6 +15,8 @@ public class PlayerData
     public bool[] itemBuyData;
     //아이템을 사용하고 있는가? 에 관련 데이터를 관리하는 bool 배열
     public bool[] itemUseData;
+    //플레이어 스테미나 강화 레벨
+    public int statusLevel;
 }
 
 public class GameManager : MonoSingleton<GameManager>
