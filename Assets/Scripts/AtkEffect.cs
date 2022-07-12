@@ -17,7 +17,9 @@ public class AtkEffect : MonoBehaviour
         if(effectTime < 0)
         {
             effectTime = 0.3f;
-            this.gameObject.SetActive(false);
+            var effect = PoolManager.GetEffect();
+            effect.gameObject.SetActive(false);
+            PoolManager.ReturnEffect(effect);
         }
     }
 

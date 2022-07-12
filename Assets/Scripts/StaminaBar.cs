@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class StaminaBar : MonoBehaviour
+public class StaminaBar : MonoSingleton<StaminaBar>
 {
     [SerializeField]
     private Slider staminaBar;
