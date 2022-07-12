@@ -230,6 +230,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   poolingObjectPrefab: {fileID: 4865895283242784226, guid: 53a1eb1e354fc644583d1ed6f77a0d12, type: 3}
   poolingEffect: {fileID: 5024009746357069194, guid: ec3f674830402cc45bce805cf6493db7, type: 3}
+  poolingBoss: {fileID: 4048169232384321974, guid: 58493d80c956b9743a2635d52bbcf41a, type: 3}
 --- !u!4 &383856203
 Transform:
   m_ObjectHideFlags: 0
@@ -257,6 +258,7 @@ GameObject:
   - component: {fileID: 583894067}
   - component: {fileID: 583894069}
   - component: {fileID: 583894070}
+  - component: {fileID: 583894071}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -348,6 +350,8 @@ MonoBehaviour:
   towerSpawner: {fileID: 1548712275}
   atkEffect: {fileID: 5054780846243583273, guid: ec3f674830402cc45bce805cf6493db7, type: 3}
   cameraShake: {fileID: 1163298994}
+  slashCount: 0
+  slashBossCount: 0
 --- !u!114 &583894070
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -360,6 +364,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38738d8ebf592c6498b9b93ae4fe6e05, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!95 &583894071
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 583894066}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 58c32c251efa13f41ab95b6450fbf661, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &682553191
 GameObject:
   m_ObjectHideFlags: 0
@@ -858,7 +882,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c70875407699832489b6d37ca666113e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  slashDirs: []
+  hp: 5
   count: 0
+  bossCount: 0
   height: 3.1
   towerList:
   - {fileID: 0}
@@ -870,6 +897,9 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  bossList:
   - {fileID: 0}
   - {fileID: 0}
 --- !u!4 &1548712276
