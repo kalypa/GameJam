@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TowerSpawner : MonoBehaviour
+public class TowerSpawner : MonoSingleton<TowerSpawner>
 {
     [SerializeField]
     private Player player; // 플레이어
@@ -15,15 +15,7 @@ public class TowerSpawner : MonoBehaviour
     public float height = 3.1f; // 층이 생성되는 높이
     public List<Tower> towerList = new List<Tower>(); //타워객체가 담아지는 리스트
     public List<Boss> bossList = new List<Boss>(); //보스객체가 담아지는 리스트
-    void Start()
-    {
-        var tower = PoolManager.GetObject(); // 풀매니저에서 타워 가져와서 생성
-        towerList[count] = tower; // 타워리스트에 타워 넣어주기
-        slashDir = tower.GetComponentInChildren<SlashDir>(); // 방향 넣어주기
-        Spawn(); // 타워 생성
-    }
-
-    void Spawn() //타워 생성 함수
+    public void Spawn() //타워 생성 함수
     {
         while(count < 10) // 10개 생성
         {
@@ -40,6 +32,12 @@ public class TowerSpawner : MonoBehaviour
             }
             height += 2.3f;
         }
+    }
+    public void SpawnFirst()
+    {
+        var tower = PoolManager.GetObject();
+        towerList[count] = tower;
+        slashDir = tower.GetComponentInChildren<SlashDir>();
     }
     public void SpawnBoss() // 보스룸 생성 함수
     {

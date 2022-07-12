@@ -24,55 +24,53 @@ public class Player : MonoBehaviour
     public SlashDir[] slashDirs; //벨 방향 배열
     public int slashCount = 0; //벤 횟수
     public int slashBossCount = 0; //보스를 벤 횟수
+    public GameObject panel = null;
     void Awake()
     {
         dragManager = GetComponent<DragManager>();
         animator = GetComponent<Animator>();
         dragManager.setOnSwipeDetected(MyOnSwipeDetected);
     }
-
-    void Start()
-    {
-
-    }
-
     void MyOnSwipeDetected(Vector3 swipeDirection) // 스와이프 함수
     {
-        if(swipeDirection.x != 0 || swipeDirection.y != 0) // x좌표 혹은 y좌표가 0이 아니라면
+        if (panel.activeSelf == false)
         {
-            if(Mathf.Abs(swipeDirection.x) > Mathf.Abs(swipeDirection.y)) //x의 절댓값이 y의 절댓값보다 크다면
+            if (swipeDirection.x != 0 || swipeDirection.y != 0) // x좌표 혹은 y좌표가 0이 아니라면
             {
-                if (slashCount != 9)
+                if (Mathf.Abs(swipeDirection.x) > Mathf.Abs(swipeDirection.y)) //x의 절댓값이 y의 절댓값보다 크다면
                 {
-                    slashDir = towerSpawner.towerList[0].GetComponentInChildren<SlashDir>();
-                    if (slashDir.transform.eulerAngles != new Vector3(0, 0, 0))
+                    if (slashCount != 9)
                     {
-                        Atk();
+                        slashDir = towerSpawner.towerList[0].GetComponentInChildren<SlashDir>();
+                        if (slashDir.transform.eulerAngles != new Vector3(0, 0, 0))
+                        {
+                            Atk();
+                        }
+                    }
+                    else if (slashCount == 9)
+                    {
+                        if (slashDirs[slashBossCount].transform.eulerAngles != new Vector3(0, 0, 0))
+                        {
+                            AtkBoss();
+                        }
                     }
                 }
-                else if (slashCount == 9)
+                else if (Mathf.Abs(swipeDirection.y) > Mathf.Abs(swipeDirection.x))//y의 절댓값이 x의 절댓값보다 크다면 
                 {
-                    if (slashDirs[slashBossCount].transform.eulerAngles != new Vector3(0, 0, 0))
+                    if (slashCount != 9)
                     {
-                        AtkBoss();
+                        slashDir = towerSpawner.towerList[0].GetComponentInChildren<SlashDir>();
+                        if (slashDir.transform.eulerAngles == new Vector3(0, 0, 0))
+                        {
+                            Atk();
+                        }
                     }
-                }
-            }
-            else if(Mathf.Abs(swipeDirection.y) > Mathf.Abs(swipeDirection.x))//y의 절댓값이 x의 절댓값보다 크다면 
-            {
-                if (slashCount != 9)
-                {
-                    slashDir = towerSpawner.towerList[0].GetComponentInChildren<SlashDir>();
-                    if (slashDir.transform.eulerAngles == new Vector3(0, 0, 0))
+                    else if (slashCount == 9)
                     {
-                        Atk();
-                    }
-                }
-                else if (slashCount == 9)
-                {
-                    if (slashDirs[slashBossCount].transform.eulerAngles == new Vector3(0, 0, 0))
-                    {
-                        AtkBoss();
+                        if (slashDirs[slashBossCount].transform.eulerAngles == new Vector3(0, 0, 0))
+                        {
+                            AtkBoss();
+                        }
                     }
                 }
             }
