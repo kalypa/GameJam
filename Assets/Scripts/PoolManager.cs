@@ -8,12 +8,16 @@ public class PoolManager : MonoSingleton<PoolManager>
     private GameObject poolingObjectPrefab; //풀링할 오브젝트
     [SerializeField]
     private GameObject poolingEffect; // 풀링할 이펙트
+    [SerializeField]
+    private GameObject poolingBoss; // 풀링할 보스오브젝트
     Queue<Tower> poolingObjectQueue = new Queue<Tower>(); //타워 오브젝트를 풀링할 큐
+    Queue<Boss> poolingBossQueue = new Queue<Boss>(); //보스 오브젝트를 풀링할 큐
     Queue<Effect> poolingEffectQueue = new Queue<Effect>();
     private void Awake()
     {
         Initialize(10); //초기 생성 수
         EffectInitialize(1);
+        BossInitialize(1);
     }
 
     private void Initialize(int initCount) // 초기 생성
@@ -32,6 +36,13 @@ public class PoolManager : MonoSingleton<PoolManager>
         }
     }
 
+    private void BossInitialize(int initCount) // 초기 생성
+    {
+        for (int i = 0; i < initCount; i++)
+        {
+            poolingBossQueue.Enqueue(CreateNewBoss());
+        }
+    }
     private Tower CreateNewObject() // 새로운 오브젝트 만들기
     {
         var newObj = Instantiate(poolingObjectPrefab).GetComponent<Tower>();
@@ -46,6 +57,14 @@ public class PoolManager : MonoSingleton<PoolManager>
         newef.gameObject.SetActive(false);
         newef.transform.SetParent(transform);
         return newef;
+    }
+
+    private Boss CreateNewBoss() // 새로운 오브젝트 만들기
+    {
+        var newBs = Instantiate(poolingBoss).GetComponent<Boss>();
+        newBs.gameObject.SetActive(false);
+        newBs.transform.SetParent(transform);
+        return newBs;
     }
 
     public static Tower GetObject() // 오브젝트 생성
@@ -66,7 +85,7 @@ public class PoolManager : MonoSingleton<PoolManager>
         }
     }
 
-    public static Effect GetEffect() // 오브젝트 생성
+    public static Effect GetEffect() // 이펙트 생성
     {
         if (Instance.poolingEffectQueue.Count > 0)
         {
@@ -84,6 +103,23 @@ public class PoolManager : MonoSingleton<PoolManager>
         }
     }
 
+    public static Boss GetBoss() // 보스오브젝트 생성
+    {
+        if (Instance.poolingBossQueue.Count > 0)
+        {
+            var Bs = Instance.poolingBossQueue.Dequeue();
+            Bs.transform.SetParent(null);
+            Bs.gameObject.SetActive(true);
+            return Bs;
+        }
+        else
+        {
+            var Bs = Instance.CreateNewBoss();
+            Bs.gameObject.SetActive(true);
+            Bs.transform.SetParent(null);
+            return Bs;
+        }
+    }
     public static void ReturnObject(Tower obj) // 오브젝트 파괴
     {
         obj.gameObject.SetActive(false);
@@ -96,5 +132,12 @@ public class PoolManager : MonoSingleton<PoolManager>
         ef.gameObject.SetActive(false);
         ef.transform.SetParent(Instance.transform);
         Instance.poolingEffectQueue.Enqueue(ef);
+    }
+
+    public static void ReturnBoss(Boss bs) // 오브젝트 파괴
+    {
+        bs.gameObject.SetActive(false);
+        bs.transform.SetParent(Instance.transform);
+        Instance.poolingBossQueue.Enqueue(bs);
     }
 }
