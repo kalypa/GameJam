@@ -6,73 +6,71 @@ using UnityEngine.UI;
 public class Player : MonoBehaviour
 {
     [SerializeField]
-    private Slider staminaBar;
+    private Slider staminaBar; //스태미나(체력) 바
     [SerializeField]
-    private StaminaBar stamina;
+    private StaminaBar stamina; //스태미나 바 코드 가져오기 위한 선언
     [SerializeField]
-    private TowerSpawner towerSpawner;
+    private TowerSpawner towerSpawner; // 타워스포너를 가져오기 위한 선언
     [SerializeField]
-    private AtkEffect atkEffect;
+    private AtkEffect atkEffect; //공격 이펙트
     [SerializeField]
-    private CameraShake cameraShake;
-    DragManager dragManager;
-    private Animator animator;
-    public int slashCount = 0;
-    public int slashBossCount = 0;
+    private CameraShake cameraShake; //카메라 흔들림
+    [SerializeField]
+    private Boss boss; //보스룸
+    DragManager dragManager; //스와이프
+    private Animator animator; //애니메이션
+    public List<SlashDir> slashList = new List<SlashDir>(); //베야할 방향 리스트
+    private SlashDir slashDir; //벨 방향
+    public SlashDir[] slashDirs; //벨 방향 배열
+    public int slashCount = 0; //벤 횟수
+    public int slashBossCount = 0; //보스를 벤 횟수
+    public GameObject panel = null;
     void Awake()
     {
         dragManager = GetComponent<DragManager>();
+        animator = GetComponent<Animator>();
         dragManager.setOnSwipeDetected(MyOnSwipeDetected);
     }
-
-    void Start()
+    void MyOnSwipeDetected(Vector3 swipeDirection) // 스와이프 함수
     {
-        animator = GetComponent<Animator>();
-    }
-
-    private void Update()
-    {
-        Debug.Log(slashCount);
-    }
-    void MyOnSwipeDetected(Vector3 swipeDirection)
-    {
-        if(swipeDirection.x != 0 || swipeDirection.y != 0)
+        if (panel.activeSelf == false)
         {
-            if(Mathf.Abs(swipeDirection.x) > Mathf.Abs(swipeDirection.y))
+            if (swipeDirection.x != 0 || swipeDirection.y != 0) // x좌표 혹은 y좌표가 0이 아니라면
             {
-                Debug.Log("가로베기");
-                if (slashCount != 49)
+                if (Mathf.Abs(swipeDirection.x) > Mathf.Abs(swipeDirection.y)) //x의 절댓값이 y의 절댓값보다 크다면
                 {
-                    if (towerSpawner.towerList[0].GetComponentInChildren<SlashDir>().transform.eulerAngles != new Vector3(0, 0, 0))
+                    if (slashCount != 9)
                     {
-                        Atk();
+                        slashDir = towerSpawner.towerList[0].GetComponentInChildren<SlashDir>();
+                        if (slashDir.transform.eulerAngles != new Vector3(0, 0, 0))
+                        {
+                            Atk();
+                        }
+                    }
+                    else if (slashCount == 9)
+                    {
+                        if (slashDirs[slashBossCount].transform.eulerAngles != new Vector3(0, 0, 0))
+                        {
+                            AtkBoss();
+                        }
                     }
                 }
-                if (slashCount == 49)
+                else if (Mathf.Abs(swipeDirection.y) > Mathf.Abs(swipeDirection.x))//y의 절댓값이 x의 절댓값보다 크다면 
                 {
-                    towerSpawner.SpawnBoss();
-                    if (towerSpawner.bossList[0].GetComponentsInChildren<SlashDir>()[slashBossCount].transform.eulerAngles != new Vector3(0, 0, 0))
+                    if (slashCount != 9)
                     {
-                        AtkBoss();
+                        slashDir = towerSpawner.towerList[0].GetComponentInChildren<SlashDir>();
+                        if (slashDir.transform.eulerAngles == new Vector3(0, 0, 0))
+                        {
+                            Atk();
+                        }
                     }
-                }
-            }
-            else if(Mathf.Abs(swipeDirection.y) > Mathf.Abs(swipeDirection.x))
-            {
-                Debug.Log("세로베기");
-                if (slashCount != 49)
-                {
-                    if (towerSpawner.towerList[0].GetComponentInChildren<SlashDir>().transform.eulerAngles == new Vector3(0, 0, 0))
+                    else if (slashCount == 9)
                     {
-                        Atk();
-                    }
-                }
-                if (slashCount == 49)
-                {
-                    towerSpawner.SpawnBoss();
-                    if (towerSpawner.bossList[0].GetComponentsInChildren<SlashDir>()[slashBossCount].transform.eulerAngles != new Vector3(0, 0, 90))
-                    {
-                        AtkBoss();
+                        if (slashDirs[slashBossCount].transform.eulerAngles == new Vector3(0, 0, 0))
+                        {
+                            AtkBoss();
+                        }
                     }
                 }
             }
@@ -90,30 +88,35 @@ public class Player : MonoBehaviour
         staminaBar.value -= 1;
         stamina.Spd += 0.01f;
         --towerSpawner.count;
-        var tower = PoolManager.GetObject();
-        towerSpawner.towerList.Add(tower);
-        tower.transform.position = new Vector3(towerSpawner.towerList[towerSpawner.count].transform.position.x, towerSpawner.towerList[towerSpawner.count].transform.position.y + 2);
-        ++towerSpawner.count;
+        if(slashCount != 9)
+        {
+            var tower = PoolManager.GetObject();
+            towerSpawner.towerList.Add(tower);
+            tower.transform.position = new Vector3(towerSpawner.towerList[towerSpawner.count].transform.position.x, towerSpawner.towerList[towerSpawner.count].transform.position.y + 2);
+            ++towerSpawner.count;
+        }
+        else
+        {
+            towerSpawner.SpawnBoss();
+        }
     }
 
     void AtkBoss()
     {
-        ++slashCount;
-        animator.SetTrigger("isAtk");
         --towerSpawner.hp;
+        animator.SetTrigger("isAtk");
         atkEffect.Effect();
         cameraShake.Shake();
         Handheld.Vibrate();
         staminaBar.value -= 1;
         stamina.Spd += 0.01f;
-        towerSpawner.slashDirs[slashBossCount].gameObject.SetActive(false);
-        ++slashBossCount;
-        --towerSpawner.bossCount;
-
-        if (towerSpawner.hp == 0)
+        slashDirs[slashBossCount].gameObject.SetActive(false);
+        slashBossCount++;
+        if (towerSpawner.hp <= 0)
         {
             PoolManager.ReturnBoss(towerSpawner.bossList[0]);
             towerSpawner.bossList.Remove(towerSpawner.bossList[0]);
+            ++slashCount;
         }
     }
 }

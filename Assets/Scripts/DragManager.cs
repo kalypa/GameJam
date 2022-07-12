@@ -4,10 +4,10 @@ using UnityEngine;
 using System;
 public class DragManager : MonoSingleton<DragManager>
 {
-    Vector3 screenSize;
-    float minSwipeDist;
-    Vector3 swipeDirection;
-    Action<Vector3> actionOnSwipeDetected;
+    Vector3 screenSize; //스크린 크기
+    float minSwipeDist; //최소 스와이프 거리
+    Vector3 swipeDirection; //스와이프 방향
+    Action<Vector3> actionOnSwipeDetected; // 스와이프 감지
 
     void Awake()
     {
@@ -17,15 +17,15 @@ public class DragManager : MonoSingleton<DragManager>
 
     void Update()
     {
-        #if UNITY_ANDROID
+        #if UNITY_ANDROID //안드로이드
             processMobileInput();
         #else
-            processInput();
+            processInput(); //PC
         #endif
     }
     Vector3 touchDownPos;
     bool swiped = false;
-    void processMobileInput()
+    void processMobileInput() //모바일 스와이프 함수
     {
         if(Input.touches.Length > 0)
         {
@@ -50,7 +50,7 @@ public class DragManager : MonoSingleton<DragManager>
         }
     }
     Vector3 mouseDownPos;
-    void processInput()
+    void processInput() //PC 스와이프 함수
     {
         if(Input.GetMouseButtonDown(0) == true)
         {
@@ -69,7 +69,7 @@ public class DragManager : MonoSingleton<DragManager>
             swiped = true;
         }
     }
-    bool checkSwipe(Vector3 downPos, Vector3 currentPos)
+    bool checkSwipe(Vector3 downPos, Vector3 currentPos) //스와이프 확인
     {
         if(swiped == true)
             return false;
@@ -83,18 +83,18 @@ public class DragManager : MonoSingleton<DragManager>
         return false;
     }
 
-    public void setOnSwipeDetected(Action<Vector3> onSwipeDetected)
+    public void setOnSwipeDetected(Action<Vector3> onSwipeDetected) //스와이프 감지 확인
     {
         actionOnSwipeDetected = onSwipeDetected;
     }
 
-    void onSwipeDetected(Vector3 swipeDirection)
+    void onSwipeDetected(Vector3 swipeDirection) //스와이프 감지
     {
         swiped = true;
         actionOnSwipeDetected(swipeDirection);
     }
     private bool isInputBlocked = false;
-    public void blockInput()
+    public void blockInput() //스와이프 막기
     {
         isInputBlocked = true;
     }
