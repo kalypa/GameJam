@@ -14,7 +14,6 @@ public class MonoSingleton<T> : MonoBehaviour where T : MonoBehaviour
             // 해당 싱글톤을 gameObject.Ondestory() 에서는 사용하지 않거나 사용한다면 null 체크를 해주자
             if (_ShuttingDown)
             {
-                Debug.Log("[Singleton] Instance '" + typeof(T) + "' already destroyed. Returning null.");
                 return null;
             }
             lock (_Lock)    //Thread Safe
@@ -38,6 +37,7 @@ public class MonoSingleton<T> : MonoBehaviour where T : MonoBehaviour
             }
         }
     }
+    private void Awake() => _Instance = FindObjectOfType(typeof(T)) as T;
     private void OnApplicationQuit()
     {
         _ShuttingDown = true;

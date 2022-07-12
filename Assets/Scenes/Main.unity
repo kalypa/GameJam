@@ -350,6 +350,69 @@ MonoBehaviour:
   towerSpawner: {fileID: 1548712275}
   atkEffect: {fileID: 5054780846243583273, guid: ec3f674830402cc45bce805cf6493db7, type: 3}
   cameraShake: {fileID: 1163298994}
+  boss: {fileID: 457411874155950254, guid: 58493d80c956b9743a2635d52bbcf41a, type: 3}
+  slashList:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  slashDirs:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   slashCount: 0
   slashBossCount: 0
 --- !u!114 &583894070
@@ -882,6 +945,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c70875407699832489b6d37ca666113e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  player: {fileID: 583894069}
   slashDirs: []
   hp: 5
   count: 0

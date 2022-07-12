@@ -11,7 +11,7 @@ public class PoolManager : MonoSingleton<PoolManager>
     [SerializeField]
     private GameObject poolingBoss; // 풀링할 보스오브젝트
     Queue<Tower> poolingObjectQueue = new Queue<Tower>(); //타워 오브젝트를 풀링할 큐
-    Queue<Boss> poolingBossQueue = new Queue<Boss>(); //보스 오브젝트를 풀링할 큐
+    Queue<Boss> poolingBossQueue = new Queue<Boss>();     //보스 오브젝트를 풀링할 큐
     Queue<Effect> poolingEffectQueue = new Queue<Effect>();
     private void Awake()
     {
@@ -134,7 +134,7 @@ public class PoolManager : MonoSingleton<PoolManager>
         Instance.poolingEffectQueue.Enqueue(ef);
     }
 
-    public static void ReturnBoss(Boss bs) // 오브젝트 파괴
+    public static void ReturnBoss(Boss bs) // 보스오브젝트 파괴
     {
         bs.gameObject.SetActive(false);
         bs.transform.SetParent(Instance.transform);
