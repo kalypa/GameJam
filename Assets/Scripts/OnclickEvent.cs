@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-public class OnclickEvent : MonoBehaviour
+public class OnclickEvent : MonoSingleton<OnclickEvent>
 {
     public GameObject gameTitle = null; // GameTitle이 들어갈 빈 오브젝트
     public GameObject startButton = null; // 스타트버튼
@@ -18,6 +18,7 @@ public class OnclickEvent : MonoBehaviour
     public GameObject statusCt = null;
     public GameObject scorePanel = null;
     public GameObject gameOverPanel = null;
+    public bool isStart = false;
     public void Start()
     {
         gameTitle.SetActive(true);
@@ -29,9 +30,9 @@ public class OnclickEvent : MonoBehaviour
     }
 
 
-
     public void OnClickStart()
     {
+        isStart = true;
         gameTitle.SetActive(false);
         startButton.SetActive(false);
         settingButton.SetActive(false);
@@ -40,7 +41,6 @@ public class OnclickEvent : MonoBehaviour
         scorePanel.SetActive(true);
         TowerSpawner.Instance.SpawnFirst();
         TowerSpawner.Instance.Spawn();
-
     }
     public void OnClickSetting()
     {
@@ -84,9 +84,11 @@ public class OnclickEvent : MonoBehaviour
     }
     public void OnClickRetry()
     {
+        Player.Instance.bossCount = 0;
         Player.Instance.animator.SetTrigger("isStart");
         Player.Instance.isGameOver = false;
         StaminaBar.Instance.Spd = 0.05f;
+        StaminaBar.Instance.staminaBar.value = 0;
         Player.Instance.slashCount = 0;
         TowerSpawner.Instance.count = 0;
         TowerSpawner.Instance.height = 2.8f;
@@ -95,19 +97,20 @@ public class OnclickEvent : MonoBehaviour
         for (int i = 0; i < TowerSpawner.Instance.towerList.Count; i++)
         {
             PoolManager.ReturnObject(TowerSpawner.Instance.towerList[i]);
+            TowerSpawner.Instance.towerList[i].GetComponentInChildren<SlashDir>().transform.eulerAngles = new Vector3(0, 0, 0);
         }
-            TowerSpawner.Instance.towerList.Clear();
-        if(TowerSpawner.Instance.bossList.Count != 0)
-        {
-            PoolManager.ReturnBoss(TowerSpawner.Instance.bossList[0]);
-            TowerSpawner.Instance.bossList.Remove(TowerSpawner.Instance.bossList[0]);
-        }
+        TowerSpawner.Instance.towerList.Clear();
+        ReturnBoss();
         OnClickStart();
     }
     public void OnClickLobby()
     {
+        isStart = false;
+        TowerSpawner.Instance.height = 2.8f;
         Player.Instance.isGameOver = false;
+        Player.Instance.bossCount = 0;
         StaminaBar.Instance.Spd = 0.05f;
+        StaminaBar.Instance.staminaBar.value = 0;
         Player.Instance.animator.SetTrigger("isStart");
         gameOverPanel.SetActive(false);
         gameTitle.SetActive(true);
@@ -123,11 +126,35 @@ public class OnclickEvent : MonoBehaviour
         for (int i = 0; i < TowerSpawner.Instance.towerList.Count; i++)
         {
             PoolManager.ReturnObject(TowerSpawner.Instance.towerList[i]);
+            TowerSpawner.Instance.towerList[i].GetComponentInChildren<SlashDir>().transform.eulerAngles = new Vector3(0, 0, 0);
         }
         TowerSpawner.Instance.towerList.Clear();
+        ReturnBoss();
+    }
+    public void ReturnBoss()
+    {
         if (TowerSpawner.Instance.bossList.Count != 0)
         {
+            TowerSpawner.Instance.hp = 5;
+            Player.Instance.slashBossCount = 0;
+            for (int i = 0; i < 5; i++)
+            {
+                Player.Instance.slashDirs[i].gameObject.SetActive(true);
+                Player.Instance.randomDir = Random.Range(1, 100);
+                if (Player.Instance.randomDir < 50)
+                {
+                    Player.Instance.slashDirs[i].transform.eulerAngles = new Vector3(0, 0, 90);
+                }
+                else
+                {
+                    Player.Instance.slashDirs[i].transform.eulerAngles = new Vector3(0, 0, 0);
+                }
+            }
             PoolManager.ReturnBoss(TowerSpawner.Instance.bossList[0]);
+            for (int i = 0; i < TowerSpawner.Instance.bossList[0].GetComponentsInChildren<SlashDir>().Length; i++)
+            {
+                TowerSpawner.Instance.bossList[0].GetComponentsInChildren<SlashDir>()[i].transform.eulerAngles = new Vector3(0, 0, 0);
+            }
             TowerSpawner.Instance.bossList.Remove(TowerSpawner.Instance.bossList[0]);
         }
     }

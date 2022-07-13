@@ -22,7 +22,7 @@ public class PlayerData
 public class GameManager : MonoSingleton<GameManager>
 {
     //플레이어 데이터 할당
-    public PlayerData playerData = new PlayerData();
+    public PlayerData playerData;
 
     //필요 파일 경로 제작
     string directoryPath;
@@ -39,7 +39,7 @@ public class GameManager : MonoSingleton<GameManager>
     void Start()
     {
         //파일 로드
-        if (File.Exists(directoryPath))
+        if (File.Exists(filePath))
         {
             LoadJson();
         }
@@ -83,16 +83,7 @@ public class GameManager : MonoSingleton<GameManager>
         string JsonData = File.ReadAllText(filePath);
         //읽은 테스트를 PlayerData 형태로 우리가 갖고 있는 playerData에 넣는다.
         playerData = JsonUtility.FromJson<PlayerData>(JsonData);
+        Debug.Log(GameManager.Instance.playerData.highScore);
         Debug.Log("로드 완료");
-    }
-
-    void Update()
-    {
-
-        //A를 누를 경우 저장
-        if (Input.GetKeyDown(KeyCode.A))
-        {
-            Save();
-        }
     }
 }

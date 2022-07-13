@@ -17,7 +17,7 @@ public class TowerSpawner : MonoSingleton<TowerSpawner>
     public List<Boss> bossList = new List<Boss>(); //보스객체가 담아지는 리스트
     public void Spawn() //타워 생성 함수
     {
-        while(count < 10) // 10개 생성
+        while(count < 9) // 10개 생성
         {
             randomDir = Random.Range(1, 100);
             var tower = PoolManager.GetObject();
@@ -35,9 +35,15 @@ public class TowerSpawner : MonoSingleton<TowerSpawner>
     }
     public void SpawnFirst()
     {
+        randomDir = Random.Range(1, 100);
         var tower = PoolManager.GetObject();
         towerList.Add(tower);
         slashDir = tower.GetComponentInChildren<SlashDir>();
+        if (randomDir < 50)
+        {
+            slashDir.transform.eulerAngles = new Vector3(0, 0, 90); // 타워 방향 가로로
+        }
+        height += 2.8f;
     }
     public void SpawnBoss() // 보스룸 생성 함수
     {
