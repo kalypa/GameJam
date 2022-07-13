@@ -84,6 +84,7 @@ public class ShopManager : MonoBehaviour
     public void SetExplain(int index)
     {
         panelIn.gameObject.SetActive(true);
+        GameManager.Instance.Save();
         ReloadExplain(index);
     }
 
@@ -94,6 +95,7 @@ public class ShopManager : MonoBehaviour
         explain.text = itemData[index].explain;
         sellTextpro.text = itemMoney[index].ToString();
         iconImage.sprite = itemData[index].Icon;
+        GameManager.Instance.Save();
     }
 
     public void FalseExplain()
@@ -119,6 +121,7 @@ public class ShopManager : MonoBehaviour
         playerStatusCoin = GameManager.Instance.playerData.statusLevel + GameManager.Instance.playerData.statusLevel / 2;
         hpLevel.text = "HP Level: " + GameManager.Instance.playerData.statusLevel;
         goldHP.text = playerStatusCoin.ToString();
+        GameManager.Instance.Save();
     }
 
     public void Buy(int itemIndex)

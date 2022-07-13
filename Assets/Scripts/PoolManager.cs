@@ -10,14 +10,18 @@ public class PoolManager : MonoSingleton<PoolManager>
     private GameObject poolingEffect; // 풀링할 이펙트
     [SerializeField]
     private GameObject poolingBoss; // 풀링할 보스오브젝트
+    [SerializeField]
+    private GameObject poolingGold;
     Queue<Tower> poolingObjectQueue = new Queue<Tower>(); //타워 오브젝트를 풀링할 큐
     Queue<Boss> poolingBossQueue = new Queue<Boss>();     //보스 오브젝트를 풀링할 큐
     Queue<Effect> poolingEffectQueue = new Queue<Effect>();
+    Queue<Gold> poolingGoldQueue = new Queue<Gold>();
     private void Awake()
     {
-        Initialize(10); //초기 생성 수
+        Initialize(9); //초기 생성 수
         EffectInitialize(1);
         BossInitialize(1);
+        GoldInitialize(1);
     }
 
     private void Initialize(int initCount) // 초기 생성
@@ -41,6 +45,13 @@ public class PoolManager : MonoSingleton<PoolManager>
         for (int i = 0; i < initCount; i++)
         {
             poolingBossQueue.Enqueue(CreateNewBoss());
+        }
+    }
+    private void GoldInitialize(int initCount) // 초기 생성
+    {
+        for (int i = 0; i < initCount; i++)
+        {
+            poolingGoldQueue.Enqueue(CreateNewGold());
         }
     }
     private Tower CreateNewObject() // 새로운 오브젝트 만들기
@@ -67,6 +78,13 @@ public class PoolManager : MonoSingleton<PoolManager>
         return newBs;
     }
 
+    private Gold CreateNewGold() // 새로운 오브젝트 만들기
+    {
+        var newGd = Instantiate(poolingGold).GetComponent<Gold>();
+        newGd.gameObject.SetActive(false);
+        newGd.transform.SetParent(transform);
+        return newGd;
+    }
     public static Tower GetObject() // 오브젝트 생성
     {
         if (Instance.poolingObjectQueue.Count > 0)
@@ -120,6 +138,25 @@ public class PoolManager : MonoSingleton<PoolManager>
             return Bs;
         }
     }
+
+    public static Gold GetGold() // 보스오브젝트 생성
+    {
+        if (Instance.poolingGoldQueue.Count > 0)
+        {
+            var Gd = Instance.poolingGoldQueue.Dequeue();
+            Gd.transform.SetParent(null);
+            Gd.gameObject.SetActive(true);
+            return Gd;
+        }
+        else
+        {
+            var Gd = Instance.CreateNewGold();
+            Gd.gameObject.SetActive(true);
+            Gd.transform.SetParent(null);
+            return Gd;
+        }
+    }
+
     public static void ReturnObject(Tower obj) // 오브젝트 파괴
     {
         obj.gameObject.SetActive(false);
@@ -139,5 +176,12 @@ public class PoolManager : MonoSingleton<PoolManager>
         bs.gameObject.SetActive(false);
         bs.transform.SetParent(Instance.transform);
         Instance.poolingBossQueue.Enqueue(bs);
+    }
+
+    public static void ReturnGold(Gold gd) // 보스오브젝트 파괴
+    {
+        gd.gameObject.SetActive(false);
+        gd.transform.SetParent(Instance.transform);
+        Instance.poolingGoldQueue.Enqueue(gd);
     }
 }

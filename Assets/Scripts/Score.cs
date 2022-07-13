@@ -5,11 +5,11 @@ using UnityEngine.UI;
 
 public class Score : MonoSingleton<Score>
 {
-    public float score = 0;
+    public int score = 0;
     public Text scoreText;
 
     void Update()
     {
-        scoreText.text = score + "F";
+        scoreText.text = score.ToString() + "F";
     }
 }
