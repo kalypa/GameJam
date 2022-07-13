@@ -11,11 +11,10 @@ public class PlayerData
     public int playerMoney;
     //�ְ�����
     public int highScore;
-    //�������� ��°�? �� ���� �����͸� �����ϴ� bool �迭
+    //�������� ��°�? �� ���� �����͸� �����ϴ� bool �迭
     public bool[] itemBuyData = new bool[4];
-    //�������� ����ϰ� �ִ°�? �� ���� �����͸� �����ϴ� bool �迭
+    //�������� ����ϰ�?�ִ°�? �� ���� �����͸� �����ϴ� bool �迭
     public bool[] itemUseData = new bool[4];
-    public bool[] itemUseData;
     //�÷��̾� ���׹̳� ��ȭ ����
     public int statusLevel;
 }
@@ -25,15 +24,15 @@ public class GameManager : MonoSingleton<GameManager>
     //�÷��̾� ������ �Ҵ�
     public PlayerData playerData = new PlayerData();
 
-    //�ʿ� ���� ��� ����
+    //�ʿ� ���� ���?����
     string directoryPath;
     string filePath;
 
     private void Awake()
     {
-        //���丮 ���
+        //���丮 ���?
         directoryPath = Application.dataPath + "/PlayerData";
-        //���� ���
+        //���� ���?
         filePath = Application.dataPath + "/PlayerData/PlayerData.txt";
     }
 
@@ -52,24 +51,24 @@ public class GameManager : MonoSingleton<GameManager>
     public void Save()
     {
 
-        //���� ���丮 ��� ���� ������ ���� ���
+        //���� ���丮 ���?���� ������ ���� ���?
         if (File.Exists(directoryPath))
         {
-            //�ش� ��ο� ������ ����
+            //�ش� ��ο�?������ ����
             File.Delete(filePath);
-            //JsonData ��� Json string �������� playerData �� ����
+            //JsonData ���?Json string �������� playerData �� ����
             string JsonData = JsonUtility.ToJson(playerData);
-            //���� ��ο� JsonData�� ��� �ؽ�Ʈ ������ �ۼ�
+            //���� ��ο�?JsonData�� ���?�ؽ�Ʈ ������ �ۼ�
             File.WriteAllText(filePath, JsonData);
             Debug.Log("�� ���̺�");
         }
         else
         {
-            //���ο� ���丮�� ���丮 ��ο� ����
+            //���ο� ���丮�� ���丮 ��ο�?����
             Directory.CreateDirectory(directoryPath);
-            //JsonData��� Json string �������� PlayerData �� ����
+            //JsonData���?Json string �������� PlayerData �� ����
             string JsonData = JsonUtility.ToJson(playerData);
-            //���� ��ο� JsonData�� ��� �ؽ�Ʈ ������ �ۼ�
+            //���� ��ο�?JsonData�� ���?�ؽ�Ʈ ������ �ۼ�
             File.WriteAllText(filePath, JsonData);
             Debug.Log("���̺� �����");
         }
@@ -80,7 +79,7 @@ public class GameManager : MonoSingleton<GameManager>
     /// </summary>
     public void LoadJson()
     {
-        //filePath�� �ִ� ��� Text�� �д´�.
+        //filePath�� �ִ� ���?Text�� �д´�.
         string JsonData = File.ReadAllText(filePath);
         //���� �׽�Ʈ�� PlayerData ���·� �츮�� ���� �ִ� playerData�� �ִ´�.
         playerData = JsonUtility.FromJson<PlayerData>(JsonData);
@@ -90,7 +89,7 @@ public class GameManager : MonoSingleton<GameManager>
     void Update()
     {
 
-        //A�� ���� ��� ����
+        //A�� ���� ���?����
         if (Input.GetKeyDown(KeyCode.A))
         {
             Save();
