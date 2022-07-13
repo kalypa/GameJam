@@ -12,9 +12,11 @@ public class PlayerData
     //최고점수
     public int highScore;
     //아이템을 샀는가? 에 관련 데이터를 관리하는 bool 배열
-    public bool[] itemBuyData;
+    public bool[] itemBuyData = new bool[4];
     //아이템을 사용하고 있는가? 에 관련 데이터를 관리하는 bool 배열
-    public bool[] itemUseData;
+    public bool[] itemUseData = new bool[4];
+    //플레이어 스테미나 강화 레벨
+    public int statusLevel;
 }
 
 public class GameManager : MonoSingleton<GameManager>
@@ -29,15 +31,18 @@ public class GameManager : MonoSingleton<GameManager>
     private void Awake()
     {
         //디렉토리 경로
-        directoryPath = Application.persistentDataPath + "/PlayerData";
+        directoryPath = Application.dataPath + "/PlayerData";
         //파일 경로
-        filePath = Application.persistentDataPath + "/PlayerData/PlayerData.txt";
+        filePath = Application.dataPath + "/PlayerData/PlayerData.txt";
     }
 
     void Start()
     {
         //파일 로드
-        LoadJson();
+        if (File.Exists(directoryPath))
+        {
+            LoadJson();
+        }
     }
 
     /// <summary>
@@ -55,6 +60,7 @@ public class GameManager : MonoSingleton<GameManager>
             string JsonData = JsonUtility.ToJson(playerData);
             //파일 경로에 JsonData의 모든 텍스트 파일을 작성
             File.WriteAllText(filePath, JsonData);
+            Debug.Log("새 세이브");
         }
         else
         {
@@ -64,6 +70,7 @@ public class GameManager : MonoSingleton<GameManager>
             string JsonData = JsonUtility.ToJson(playerData);
             //파일 경로에 JsonData의 모든 텍스트 파일을 작성
             File.WriteAllText(filePath, JsonData);
+            Debug.Log("세이브 덮어쓰기");
         }
     }
 
@@ -76,12 +83,16 @@ public class GameManager : MonoSingleton<GameManager>
         string JsonData = File.ReadAllText(filePath);
         //읽은 테스트를 PlayerData 형태로 우리가 갖고 있는 playerData에 넣는다.
         playerData = JsonUtility.FromJson<PlayerData>(JsonData);
+        Debug.Log("로드 완료");
     }
 
     void Update()
     {
 
-        Save();
-
+        //A를 누를 경우 저장
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            Save();
+        }
     }
 }
