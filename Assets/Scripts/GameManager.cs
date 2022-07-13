@@ -3,42 +3,43 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 
-//ÇÃ·¹ÀÌ¾î µ¥ÀÌÅÍ Å¬·¡½º
+//ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Å¬ï¿½ï¿½ï¿½ï¿½
 [System.Serializable]
 public class PlayerData
 {
-    //µ·
+    //ï¿½ï¿½
     public int playerMoney;
-    //ÃÖ°íÁ¡¼ö
+    //ï¿½Ö°ï¿½ï¿½ï¿½ï¿½ï¿½
     public int highScore;
-    //¾ÆÀÌÅÛÀ» »ò´Â°¡? ¿¡ °ü·Ã µ¥ÀÌÅÍ¸¦ °ü¸®ÇÏ´Â bool ¹è¿­
+    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Â°ï¿½? ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Í¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ bool ï¿½è¿­
     public bool[] itemBuyData = new bool[4];
-    //¾ÆÀÌÅÛÀ» »ç¿ëÇÏ°í ÀÖ´Â°¡? ¿¡ °ü·Ã µ¥ÀÌÅÍ¸¦ °ü¸®ÇÏ´Â bool ¹è¿­
+    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ ï¿½Ö´Â°ï¿½? ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Í¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ bool ï¿½è¿­
     public bool[] itemUseData = new bool[4];
-    //ÇÃ·¹ÀÌ¾î ½ºÅ×¹Ì³ª °­È­ ·¹º§
+    public bool[] itemUseData;
+    //ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½ï¿½×¹Ì³ï¿½ ï¿½ï¿½È­ ï¿½ï¿½ï¿½ï¿½
     public int statusLevel;
 }
 
 public class GameManager : MonoSingleton<GameManager>
 {
-    //ÇÃ·¹ÀÌ¾î µ¥ÀÌÅÍ ÇÒ´ç
+    //ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ò´ï¿½
     public PlayerData playerData = new PlayerData();
 
-    //ÇÊ¿ä ÆÄÀÏ °æ·Î Á¦ÀÛ
+    //ï¿½Ê¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     string directoryPath;
     string filePath;
 
     private void Awake()
     {
-        //µð·ºÅä¸® °æ·Î
+        //ï¿½ï¿½ï¿½ä¸® ï¿½ï¿½ï¿½
         directoryPath = Application.dataPath + "/PlayerData";
-        //ÆÄÀÏ °æ·Î
+        //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
         filePath = Application.dataPath + "/PlayerData/PlayerData.txt";
     }
 
     void Start()
     {
-        //ÆÄÀÏ ·Îµå
+        //ï¿½ï¿½ï¿½ï¿½ ï¿½Îµï¿½
         if (File.Exists(directoryPath))
         {
             LoadJson();
@@ -46,50 +47,50 @@ public class GameManager : MonoSingleton<GameManager>
     }
 
     /// <summary>
-    /// ÆÄÀÏ ÀúÀå
+    /// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     /// </summary>
     public void Save()
     {
 
-        //¸¸¾à µð·ºÅä¸® °æ·Î ³»¿¡ ÆÄÀÏÀÌ ÀÖÀ» °æ¿ì
+        //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ä¸® ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
         if (File.Exists(directoryPath))
         {
-            //ÇØ´ç °æ·Î¿¡ ÆÄÀÏÀ» »èÁ¦
+            //ï¿½Ø´ï¿½ ï¿½ï¿½Î¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             File.Delete(filePath);
-            //JsonData ¶ó´Â Json string Çü½ÄÀ¸·Î playerData ¸¦ ÀúÀå
+            //JsonData ï¿½ï¿½ï¿½ Json string ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ playerData ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             string JsonData = JsonUtility.ToJson(playerData);
-            //ÆÄÀÏ °æ·Î¿¡ JsonDataÀÇ ¸ðµç ÅØ½ºÆ® ÆÄÀÏÀ» ÀÛ¼º
+            //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Î¿ï¿½ JsonDataï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½Ø½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Û¼ï¿½
             File.WriteAllText(filePath, JsonData);
-            Debug.Log("»õ ¼¼ÀÌºê");
+            Debug.Log("ï¿½ï¿½ ï¿½ï¿½ï¿½Ìºï¿½");
         }
         else
         {
-            //»õ·Î¿î µð·ºÅä¸®¸¦ µð·ºÅä¸® °æ·Î¿¡ »ý¼º
+            //ï¿½ï¿½ï¿½Î¿ï¿½ ï¿½ï¿½ï¿½ä¸®ï¿½ï¿½ ï¿½ï¿½ï¿½ä¸® ï¿½ï¿½Î¿ï¿½ ï¿½ï¿½ï¿½ï¿½
             Directory.CreateDirectory(directoryPath);
-            //JsonData¶ó´Â Json string Çü½ÄÀ¸·Î PlayerData ¸¦ ÀúÀå
+            //JsonDataï¿½ï¿½ï¿½ Json string ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ PlayerData ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             string JsonData = JsonUtility.ToJson(playerData);
-            //ÆÄÀÏ °æ·Î¿¡ JsonDataÀÇ ¸ðµç ÅØ½ºÆ® ÆÄÀÏÀ» ÀÛ¼º
+            //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Î¿ï¿½ JsonDataï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½Ø½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Û¼ï¿½
             File.WriteAllText(filePath, JsonData);
-            Debug.Log("¼¼ÀÌºê µ¤¾î¾²±â");
+            Debug.Log("ï¿½ï¿½ï¿½Ìºï¿½ ï¿½ï¿½ï¿½î¾²ï¿½ï¿½");
         }
     }
 
     /// <summary>
-    /// ÆÄÀÏ ·Îµå
+    /// ï¿½ï¿½ï¿½ï¿½ ï¿½Îµï¿½
     /// </summary>
     public void LoadJson()
     {
-        //filePath¿¡ ÀÖ´Â ¸ðµç Text¸¦ ÀÐ´Â´Ù.
+        //filePathï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½ Textï¿½ï¿½ ï¿½Ð´Â´ï¿½.
         string JsonData = File.ReadAllText(filePath);
-        //ÀÐÀº Å×½ºÆ®¸¦ PlayerData ÇüÅÂ·Î ¿ì¸®°¡ °®°í ÀÖ´Â playerData¿¡ ³Ö´Â´Ù.
+        //ï¿½ï¿½ï¿½ï¿½ ï¿½×½ï¿½Æ®ï¿½ï¿½ PlayerData ï¿½ï¿½ï¿½Â·ï¿½ ï¿½ì¸®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´ï¿½ playerDataï¿½ï¿½ ï¿½Ö´Â´ï¿½.
         playerData = JsonUtility.FromJson<PlayerData>(JsonData);
-        Debug.Log("·Îµå ¿Ï·á");
+        Debug.Log("ï¿½Îµï¿½ ï¿½Ï·ï¿½");
     }
 
     void Update()
     {
 
-        //A¸¦ ´©¸¦ °æ¿ì ÀúÀå
+        //Aï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         if (Input.GetKeyDown(KeyCode.A))
         {
             Save();
