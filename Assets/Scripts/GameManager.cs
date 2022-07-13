@@ -29,9 +29,9 @@ public class GameManager : MonoSingleton<GameManager>
     private void Awake()
     {
         //디렉토리 경로
-        directoryPath = Application.dataPath + "/PlayerData";
+        directoryPath = Application.persistentDataPath + "/PlayerData";
         //파일 경로
-        filePath = Application.dataPath + "/PlayerData/PlayerData.txt";
+        filePath = Application.persistentDataPath + "/PlayerData/PlayerData.txt";
     }
 
     void Start()
@@ -55,7 +55,6 @@ public class GameManager : MonoSingleton<GameManager>
             string JsonData = JsonUtility.ToJson(playerData);
             //파일 경로에 JsonData의 모든 텍스트 파일을 작성
             File.WriteAllText(filePath, JsonData);
-            Debug.Log("새 세이브");
         }
         else
         {
@@ -65,7 +64,6 @@ public class GameManager : MonoSingleton<GameManager>
             string JsonData = JsonUtility.ToJson(playerData);
             //파일 경로에 JsonData의 모든 텍스트 파일을 작성
             File.WriteAllText(filePath, JsonData);
-            Debug.Log("세이브 덮어쓰기");
         }
     }
 
@@ -78,16 +76,12 @@ public class GameManager : MonoSingleton<GameManager>
         string JsonData = File.ReadAllText(filePath);
         //읽은 테스트를 PlayerData 형태로 우리가 갖고 있는 playerData에 넣는다.
         playerData = JsonUtility.FromJson<PlayerData>(JsonData);
-        Debug.Log("로드 완료");
     }
 
     void Update()
     {
 
-        //A를 누를 경우 저장
-        if (Input.GetKeyDown(KeyCode.A))
-        {
-            Save();
-        }
+        Save();
+
     }
 }
