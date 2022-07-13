@@ -6,11 +6,6 @@ public class AtkEffect : MonoBehaviour
 {
     private float effectTime;
 
-    void Start()
-    {
-        
-    }
-
     void Update()
     {
         effectTime -= Time.deltaTime;

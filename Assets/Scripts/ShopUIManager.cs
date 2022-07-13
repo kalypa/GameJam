@@ -13,7 +13,6 @@ public class ShopUIManager : MonoBehaviour
         textMesh.text = "";
     }
 
-    // Update is called once per frame
     void Update()
     {
         textMesh.text = GameManager.Instance.playerData.playerMoney.ToString();

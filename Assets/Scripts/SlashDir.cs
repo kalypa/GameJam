@@ -4,13 +4,5 @@ using UnityEngine;
 
 public class SlashDir : MonoSingleton<SlashDir>
 {
-    void Start()
-    {
-        
-    }
 
-    void Update()
-    {
-        
-    }
 }

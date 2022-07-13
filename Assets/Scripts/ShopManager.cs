@@ -63,6 +63,8 @@ public class ShopManager : MonoBehaviour
     [SerializeField]
     private TextMeshProUGUI goldHP;
 
+    [SerializeField]
+    private StaminaBar staminaBar;
     public bool clear = false;
 
     public int playerStatusCoin = 0;
@@ -180,6 +182,7 @@ public class ShopManager : MonoBehaviour
             GameManager.Instance.playerData.statusLevel += 1;
             GameManager.Instance.Save();
             ShopUpdate();
+            staminaBar.staminaBar.maxValue += 0.1f;
         }
         else { }
     }

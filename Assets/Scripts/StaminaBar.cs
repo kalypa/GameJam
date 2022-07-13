@@ -7,7 +7,6 @@ public class StaminaBar : MonoSingleton<StaminaBar>
 {
     public Slider staminaBar;
     public float Spd;
-    public float MaxHp = 1;
     void Awake()
     {
         staminaBar.value = 0;

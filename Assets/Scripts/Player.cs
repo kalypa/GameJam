@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+using DG.Tweening;
 public class Player : MonoSingleton<Player>
 {
     [SerializeField]
@@ -30,21 +30,32 @@ public class Player : MonoSingleton<Player>
     public bool isGameOver = false;
     public Text ScoreText;
     public Text HighScoreText;
+    public Text goldText;
+    private float randomGold;
+    [SerializeField]
+    private Image shopPlayer;
+    [SerializeField]
+    private Sprite shopPlayer1;
+    [SerializeField]
+    private Sprite shopPlayer2;
+    [SerializeField]
+    private Sprite shopPlayer3;
+    [SerializeField]
+    private Sprite shopPlayer4;
+    public Image lobbyPlayer;
+    [SerializeField]
+    private SpriteRenderer[] backGroundSprite;
     void Awake()
     {
         dragManager = GetComponent<DragManager>();
         animator = GetComponent<Animator>();
         dragManager.setOnSwipeDetected(MyOnSwipeDetected);
+        CheckUse();
     }
-
-    private void Start()
+    void Update()
     {
-        Debug.Log(GameManager.Instance.playerData.highScore);
-    }
-
-    private void Update()
-    {
-        Debug.Log(GameManager.Instance.playerData.highScore);
+        CheckUse();
+        BackGroundChange();
     }
     void MyOnSwipeDetected(Vector3 swipeDirection) // 스와이프 함수
     {
@@ -119,32 +130,17 @@ public class Player : MonoSingleton<Player>
     }
     void Atk()
     {
-        ++slashCount;
-        animator.SetTrigger("isAtk");
-        PoolManager.ReturnObject(towerSpawner.towerList[0]);
-        TowerSpawner.Instance.towerList[0].GetComponentInChildren<SlashDir>().transform.eulerAngles = new Vector3(0, 0, 0);
-        towerSpawner.towerList.Remove(towerSpawner.towerList[0]);
+        randomGold = Random.Range(1, 100);
+        if(randomGold <= 40)
+        {
+            AddGold();
+        }
+        AnimationState();
+        AtkTower();
         atkEffect.Effect();
         cameraShake.Shake();
-        Handheld.Vibrate();
         staminaBar.value -= 1;
-        stamina.Spd += 0.001f;
-        --towerSpawner.count;
-        Score.Instance.score += 1;
-        if(slashCount != 50 + 50 * bossCount)
-        {
-            randomDir = Random.Range(1, 100);
-            var tower = PoolManager.GetObject();
-            slashDir = tower.GetComponentInChildren<SlashDir>();
-            towerSpawner.towerList.Add(tower);
-            if (randomDir < 50)
-            {
-                slashDir.transform.eulerAngles = new Vector3(0, 0, 90); // 타워 방향 가로로
-            }
-            tower.transform.position = new Vector3(towerSpawner.towerList[towerSpawner.count].transform.position.x, towerSpawner.towerList[towerSpawner.count].transform.position.y + 4);
-            ++towerSpawner.count;
-        }
-        else
+        if(slashCount == 50 + 50 * bossCount)
         {
             towerSpawner.SpawnBoss();
         }
@@ -152,17 +148,18 @@ public class Player : MonoSingleton<Player>
 
     void AtkBoss()
     {
+        AddGold();
         --towerSpawner.hp;
-        animator.SetTrigger("isAtk");
+        AnimationState();
         atkEffect.Effect();
         cameraShake.Shake();
-        Handheld.Vibrate();
         staminaBar.value -= 1;
-        stamina.Spd += 0.01f;
+        stamina.Spd += 0.001f;
         slashDirs[slashBossCount].gameObject.SetActive(false);
         slashBossCount++;
         if (towerSpawner.hp <= 0)
         {
+            Handheld.Vibrate();
             PoolManager.ReturnBoss(towerSpawner.bossList[0]);
             for(int i = 0; i < towerSpawner.bossList[0].GetComponentsInChildren<SlashDir>().Length; i++)
             {
@@ -185,8 +182,11 @@ public class Player : MonoSingleton<Player>
                 }
             }
             bossCount++;
-            slashCount += 1;
-            ++Score.Instance.score;
+            if(GameManager.Instance.playerData.itemUseData[0] == true || GameManager.Instance.playerData.itemUseData[1])
+            {
+                slashCount += 1;
+                ++Score.Instance.score;
+            }
         }
     }
     public void GameOver()
@@ -195,6 +195,9 @@ public class Player : MonoSingleton<Player>
         {
             GameManager.Instance.playerData.highScore = Score.Instance.score;
             GameManager.Instance.Save();
+            HighScoreText.text = "최고 층 : " + GameManager.Instance.playerData.highScore.ToString() + "F";
+            ScoreText.text = "현재 층 : " + Score.Instance.score.ToString() + "F";
+            panel.SetActive(true);
         }
         HighScoreText.text = "최고 층 : " + GameManager.Instance.playerData.highScore.ToString() + "F";
         ScoreText.text = "현재 층 : " + Score.Instance.score.ToString() + "F";
@@ -202,8 +205,9 @@ public class Player : MonoSingleton<Player>
     }
     public void Dead()
     {
+        animator.SetBool("isStart", false);
         isGameOver = true;
-        animator.SetTrigger("isDead");
+        DeadState();
     }
     public void GameOverDelay()
     {
@@ -212,7 +216,237 @@ public class Player : MonoSingleton<Player>
     void AddGold()
     {
         GameManager.Instance.playerData.playerMoney++;
-        PoolManager.GetGold();
+        goldText.text = GameManager.Instance.playerData.playerMoney.ToString();
+        var gold = PoolManager.GetGold();
         Gold.Instance.GetGold();
+        StartCoroutine(CoinPooling(gold));
+    }
+    public void CheckUse()
+    {
+        Image thisImg = shopPlayer.GetComponent<Image>();
+        Image lobbyImg = lobbyPlayer.GetComponent<Image>();
+        if (GameManager.Instance.playerData.itemUseData[0] == true)
+        {
+            if(isGameOver != true)
+            {
+                lobbyImg.sprite = shopPlayer1;
+            }
+            thisImg.sprite = shopPlayer1;
+        }
+        else if (GameManager.Instance.playerData.itemUseData[1] == true)
+        {
+            if (isGameOver != true)
+            {
+                lobbyImg.sprite = shopPlayer2;
+            }
+            thisImg.sprite = shopPlayer2;
+        }
+        else if (GameManager.Instance.playerData.itemUseData[2] == true)
+        {
+            if (isGameOver != true)
+            {
+                lobbyImg.sprite = shopPlayer3;
+            }
+            thisImg.sprite = shopPlayer3;
+        }
+        else if (GameManager.Instance.playerData.itemUseData[3] == true)
+        {
+            if (isGameOver != true)
+            {
+                lobbyImg.sprite = shopPlayer4;
+            }
+            thisImg.sprite = shopPlayer4;
+        }
+    }
+    void AnimationState()
+    {
+        if (GameManager.Instance.playerData.itemUseData[0] == true)
+        {
+            animator.SetTrigger("isAtk");
+        }
+        else if (GameManager.Instance.playerData.itemUseData[1] == true)
+        {
+            animator.SetTrigger("isAtk2");
+        }
+        else if (GameManager.Instance.playerData.itemUseData[2] == true)
+        {
+            animator.SetTrigger("isAtk3");
+        }
+        else if (GameManager.Instance.playerData.itemUseData[3] == true)
+        {
+            animator.SetTrigger("isAtk4");
+        }
+    }
+    void DeadState()
+    {
+        if (GameManager.Instance.playerData.itemUseData[0] == true)
+        {
+            animator.SetBool("isAtkIdle", false);
+            animator.Play("Dead");
+        }
+        else if (GameManager.Instance.playerData.itemUseData[1] == true)
+        {
+            animator.SetBool("isAtk2Idle", false);
+            animator.Play("Dead2");
+        }
+        else if (GameManager.Instance.playerData.itemUseData[2] == true)
+        {
+            animator.SetBool("isAtk3Idle", false);
+            animator.Play("Dead3");
+        }
+        else if (GameManager.Instance.playerData.itemUseData[3] == true)
+        {
+            animator.SetBool("isAtk4Idle", false);
+            animator.Play("Dead4");
+        }
+    }
+    void AtkTower()
+    {
+        if (GameManager.Instance.playerData.itemUseData[0] == true)
+        {
+            ++slashCount;
+            Score.Instance.score += 1;
+            PoolManager.ReturnObject(towerSpawner.towerList[0]);
+            TowerSpawner.Instance.towerList[0].GetComponentInChildren<SlashDir>().transform.eulerAngles = new Vector3(0, 0, 0);
+            towerSpawner.towerList.Remove(towerSpawner.towerList[0]);
+            --towerSpawner.count;
+            if (slashCount != 50 + 50 * bossCount)
+            {
+                randomDir = Random.Range(1, 100);
+                var tower = PoolManager.GetObject();
+                slashDir = tower.GetComponentInChildren<SlashDir>();
+                towerSpawner.towerList.Add(tower);
+                if (randomDir < 50)
+                {
+                    slashDir.transform.eulerAngles = new Vector3(0, 0, 90); // 타워 방향 가로로
+                }
+                tower.transform.position = new Vector3(towerSpawner.towerList[towerSpawner.count].transform.position.x, towerSpawner.towerList[towerSpawner.count].transform.position.y + 4);
+                ++towerSpawner.count;
+            }
+            stamina.Spd += 0.001f;
+        }
+        else if (GameManager.Instance.playerData.itemUseData[1] == true)
+        {
+            ++slashCount;
+            Score.Instance.score += 1;
+            PoolManager.ReturnObject(towerSpawner.towerList[0]);
+            TowerSpawner.Instance.towerList[0].GetComponentInChildren<SlashDir>().transform.eulerAngles = new Vector3(0, 0, 0);
+            towerSpawner.towerList.Remove(towerSpawner.towerList[0]);
+            --towerSpawner.count;
+            if (slashCount != 50 + 50 * bossCount)
+            {
+                randomDir = Random.Range(1, 100);
+                var tower = PoolManager.GetObject();
+                slashDir = tower.GetComponentInChildren<SlashDir>();
+                towerSpawner.towerList.Add(tower);
+                if (randomDir < 50)
+                {
+                    slashDir.transform.eulerAngles = new Vector3(0, 0, 90); // 타워 방향 가로로
+                }
+                tower.transform.position = new Vector3(towerSpawner.towerList[towerSpawner.count].transform.position.x, towerSpawner.towerList[towerSpawner.count].transform.position.y + 4);
+                ++towerSpawner.count;
+            }
+            stamina.Spd += 0.0008f;
+        }
+        else if(GameManager.Instance.playerData.itemUseData[2] == true)
+        {
+            for (int i = 0; i < 2; i++)
+            {
+                ++slashCount;
+                Score.Instance.score += 1;
+                PoolManager.ReturnObject(towerSpawner.towerList[0]);
+                TowerSpawner.Instance.towerList[0].GetComponentInChildren<SlashDir>().transform.eulerAngles = new Vector3(0, 0, 0);
+                towerSpawner.towerList.Remove(towerSpawner.towerList[0]);
+                --towerSpawner.count;
+                if (slashCount != 50 + 50 * bossCount)
+                {
+                    randomDir = Random.Range(1, 100);
+                    var tower = PoolManager.GetObject();
+                    slashDir = tower.GetComponentInChildren<SlashDir>();
+                    towerSpawner.towerList.Add(tower);
+                    if (randomDir < 50)
+                    {
+                        slashDir.transform.eulerAngles = new Vector3(0, 0, 90); // 타워 방향 가로로
+                    }
+                    tower.transform.position = new Vector3(towerSpawner.towerList[towerSpawner.count].transform.position.x, towerSpawner.towerList[towerSpawner.count].transform.position.y + 4);
+                    ++towerSpawner.count;
+
+                }
+            }
+            stamina.Spd += 0.001f;
+        }
+        else if (GameManager.Instance.playerData.itemUseData[3] == true)
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                ++slashCount;
+                Score.Instance.score += 1;
+                PoolManager.ReturnObject(towerSpawner.towerList[0]);
+                TowerSpawner.Instance.towerList[0].GetComponentInChildren<SlashDir>().transform.eulerAngles = new Vector3(0, 0, 0);
+                towerSpawner.towerList.Remove(towerSpawner.towerList[0]);
+                --towerSpawner.count;
+                if (slashCount != 50 + 50 * bossCount)
+                {
+                    randomDir = Random.Range(1, 100);
+                    var tower = PoolManager.GetObject();
+                    slashDir = tower.GetComponentInChildren<SlashDir>();
+                    towerSpawner.towerList.Add(tower);
+                    if (randomDir < 50)
+                    {
+                        slashDir.transform.eulerAngles = new Vector3(0, 0, 90); // 타워 방향 가로로
+                    }
+                    tower.transform.position = new Vector3(towerSpawner.towerList[towerSpawner.count].transform.position.x, towerSpawner.towerList[towerSpawner.count].transform.position.y + 4);
+                    ++towerSpawner.count;
+                }
+            }
+            stamina.Spd += 0.002f;
+        }
+    }
+    public void IdleState()
+    {
+        if (GameManager.Instance.playerData.itemUseData[0] == true)
+        {
+            animator.Play("Atk Idle");
+        }
+        else if (GameManager.Instance.playerData.itemUseData[1] == true)
+        {
+            animator.Play("Atk2 Idle");
+        }
+        else if (GameManager.Instance.playerData.itemUseData[2] == true)
+        {
+            animator.Play("Atk3 Idle");
+        }
+        else if (GameManager.Instance.playerData.itemUseData[3] == true)
+        {
+            animator.Play("Atk4 Idle");
+        }
+    }
+    public void BackGroundChange()
+    {
+        if(slashCount >= 100)
+        {
+            backGroundSprite[0].DOFade(0f, 1.5f);
+            backGroundSprite[1].gameObject.SetActive(true);
+        }
+        else if(slashCount >= 300)
+        {
+            backGroundSprite[1].DOFade(0f, 1.5f);
+            backGroundSprite[2].gameObject.SetActive(true);
+        }
+        else if(slashCount >= 500)
+        {
+            backGroundSprite[2].DOFade(0f, 1.5f);
+            backGroundSprite[3].gameObject.SetActive(true);
+        }
+        else if(slashCount >= 1000)
+        {
+            backGroundSprite[3].DOFade(0f, 1.5f);
+            backGroundSprite[4].gameObject.SetActive(true);
+        }
+    }
+    IEnumerator CoinPooling(Gold gold)
+    {
+        yield return new WaitForSeconds(0.2f);
+        PoolManager.ReturnGold(gold);
     }
 }

@@ -21,6 +21,8 @@ public class OnclickEvent : MonoSingleton<OnclickEvent>
     public bool isStart = false;
     public void Start()
     {
+        Player.Instance.goldText.text = GameManager.Instance.playerData.playerMoney.ToString();
+        Player.Instance.lobbyPlayer.gameObject.SetActive(true);
         gameTitle.SetActive(true);
         startButton.SetActive(true);
         settingButton.SetActive(true);
@@ -32,7 +34,10 @@ public class OnclickEvent : MonoSingleton<OnclickEvent>
 
     public void OnClickStart()
     {
+        Player.Instance.IdleState();
+        Player.Instance.transform.position = new Vector3(0, -3, -8);
         isStart = true;
+        Player.Instance.lobbyPlayer.gameObject.SetActive(false);
         gameTitle.SetActive(false);
         startButton.SetActive(false);
         settingButton.SetActive(false);
@@ -64,11 +69,13 @@ public class OnclickEvent : MonoSingleton<OnclickEvent>
     }
     public void OnClickShop()
     {
+        Player.Instance.lobbyPlayer.gameObject.SetActive(false);
         Shop.SetActive(true);
         Time.timeScale = 0;
     }
     public void OnclickReload()
     {
+        Player.Instance.lobbyPlayer.gameObject.SetActive(true);
         Shop.SetActive(false);
         Time.timeScale = 1;
     }
@@ -84,8 +91,8 @@ public class OnclickEvent : MonoSingleton<OnclickEvent>
     }
     public void OnClickRetry()
     {
+        isStart = true;
         Player.Instance.bossCount = 0;
-        Player.Instance.animator.SetTrigger("isStart");
         Player.Instance.isGameOver = false;
         StaminaBar.Instance.Spd = 0.05f;
         StaminaBar.Instance.staminaBar.value = 0;
@@ -105,13 +112,16 @@ public class OnclickEvent : MonoSingleton<OnclickEvent>
     }
     public void OnClickLobby()
     {
+        Player.Instance.IdleState();
+        Player.Instance.transform.position = new Vector3(0, -3, 5);
+        Player.Instance.animator.SetBool("isStart", true);
         isStart = false;
         TowerSpawner.Instance.height = 2.8f;
         Player.Instance.isGameOver = false;
         Player.Instance.bossCount = 0;
         StaminaBar.Instance.Spd = 0.05f;
         StaminaBar.Instance.staminaBar.value = 0;
-        Player.Instance.animator.SetTrigger("isStart");
+        Player.Instance.lobbyPlayer.gameObject.SetActive(true);
         gameOverPanel.SetActive(false);
         gameTitle.SetActive(true);
         startButton.SetActive(true);
