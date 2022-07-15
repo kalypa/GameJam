@@ -10,9 +10,11 @@ public class PoolManager : MonoSingleton<PoolManager>
     private GameObject poolingEffect; // 풀링할 이펙트
     [SerializeField]
     private GameObject poolingBoss; // 풀링할 보스오브젝트
+    [SerializeField]
+    private GameObject poolingCoinEffect;
     Queue<Tower> poolingObjectQueue = new Queue<Tower>(); //타워 오브젝트를 풀링할 큐
-    Queue<Boss> poolingBossQueue = new Queue<Boss>();     //보스 오브젝트를 풀링할 큐
     Queue<Effect> poolingEffectQueue = new Queue<Effect>();
+    Queue<Boss> poolingBossQueue = new Queue<Boss>();     //보스 오브젝트를 풀링할 큐
     private void Awake()
     {
         Initialize(4); //초기 생성 수
@@ -42,6 +44,7 @@ public class PoolManager : MonoSingleton<PoolManager>
             poolingBossQueue.Enqueue(CreateNewBoss());
         }
     }
+
     private Tower CreateNewObject() // 새로운 오브젝트 만들기
     {
         var newObj = Instantiate(poolingObjectPrefab).GetComponent<Tower>();
@@ -134,11 +137,10 @@ public class PoolManager : MonoSingleton<PoolManager>
         Instance.poolingEffectQueue.Enqueue(ef);
     }
 
-    public static void ReturnBoss(Boss bs) // 보스오브젝트 파괴
+    public static void ReturnBoss(Boss bs) // 오브젝트 파괴
     {
         bs.gameObject.SetActive(false);
         bs.transform.SetParent(Instance.transform);
         Instance.poolingBossQueue.Enqueue(bs);
     }
-
 }

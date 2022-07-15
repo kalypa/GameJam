@@ -20,6 +20,8 @@ public class setDial : MonoBehaviour
     private AudioSource bgmSource;
     [SerializeField]
     private Image FadeImage;
+    [SerializeField]
+    private GameObject loadingImage;
 
     public bool nowMent = false;
     public bool istyping;
@@ -52,6 +54,10 @@ public class setDial : MonoBehaviour
     IEnumerator FadeandLoad()
     {
         FadeImage.DOFade(1f, 1f);
+        for(int i = 0; i < loadingImage.GetComponentsInChildren<Image>().Length; i++)
+        {
+            loadingImage.GetComponentsInChildren<Image>()[i].DOFade(1f, 1f);
+        }
         yield return new WaitForSeconds(1f);
         SceneManager.LoadScene("Main");
     }
