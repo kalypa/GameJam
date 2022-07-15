@@ -58,22 +58,18 @@ public class Player : MonoSingleton<Player>
     public AudioClip goldClip;
 
     public bool isChangeBack = false;
-
+    public bool isFirstStart = false;
     void Awake()
     {
         dragManager = GetComponent<DragManager>();
         animator = GetComponent<Animator>();
         dragManager.setOnSwipeDetected(MyOnSwipeDetected);
         CheckUse();
+        isFirstStart = true;
     }
     void Update()
     {
         CheckUse();
-        if (OnclickEvent.Instance.isStart == true && OnclickEvent.Instance.isRestart != true)
-        {
-            BackGroundChange();
-        }
-        Debug.Log(slashCount);
     }
     void MyOnSwipeDetected(Vector3 swipeDirection) 
     {
@@ -151,7 +147,7 @@ public class Player : MonoSingleton<Player>
         playerSound.PlayOneShot(playerClip);
         OnclickEvent.Instance.isRestart = false;
         randomGold = Random.Range(1, 100);
-        if(randomGold <= 40)
+        if (randomGold <= 40)
         {
             AddGold();
         }
@@ -204,12 +200,8 @@ public class Player : MonoSingleton<Player>
                 }
             }
             bossCount++;
-            /*if(GameManager.Instance.playerData.itemUseData[0] == true || GameManager.Instance.playerData.itemUseData[1])
-            {
-                slashCount += 1;
-                ++Score.Instance.score;
-            }*/
             RandomTower();
+            BackGroundChange();
             SoundChange();
         }
     }
@@ -483,7 +475,7 @@ public class Player : MonoSingleton<Player>
         animator.speed = animator.speed / 5 * 3;
         Camera.main.orthographicSize = 4f;
         Time.timeScale = 0.4f;
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.1f);
         Time.timeScale = 1f;
         Camera.main.orthographicSize = 5f;
         animator.speed = animator.speed / 3 * 5;

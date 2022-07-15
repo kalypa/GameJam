@@ -15,13 +15,12 @@ public class TowerSpawner : MonoSingleton<TowerSpawner>
     public float height = 0f; // 층이 생성되는 높이
     public List<Tower> towerList = new List<Tower>(); //타워객체가 담아지는 리스트
     public List<Boss> bossList = new List<Boss>(); //보스객체가 담아지는 리스트
-
     public bool isVertical = false;
     public bool isHorizontal = false;
 
     public void Spawn() //타워 생성 함수
     {
-        while(count < 2) // 10개 생성
+        while(count < 4) // 10개 생성
         {
             randomDir = Random.Range(1, 100);
             var tower = PoolManager.GetObject();
@@ -35,6 +34,10 @@ public class TowerSpawner : MonoSingleton<TowerSpawner>
             }
             height += 3.1f;
             ++count;
+        }
+        if(Player.Instance.isFirstStart == true)
+        {
+            towerList.Swap(3, 4);
         }
     }
     public void SpawnFirst()

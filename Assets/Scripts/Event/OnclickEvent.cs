@@ -25,10 +25,15 @@ public class OnclickEvent : MonoSingleton<OnclickEvent>
     public AudioSource ButtonaudioSource;
     public AudioClip buyClip;
     public AudioClip buttonSound;
-
+    public GameObject quitPanel;
+    public GameObject weaponButton;
+    public GameObject goldButton;
     public bool isLeft = false;
     public bool isRight = false;
-
+    public Sprite grayWeapon;
+    public Sprite grayGold;
+    public Sprite originWeapon;
+    public Sprite originGold;
     public void Start()
     {
         Player.Instance.goldText.text = GameManager.Instance.playerData.playerMoney.ToString();
@@ -43,6 +48,26 @@ public class OnclickEvent : MonoSingleton<OnclickEvent>
     private void Update()
     {
         Player.Instance.goldText.text = GameManager.Instance.playerData.playerMoney.ToString();
+        if(Application.platform == RuntimePlatform.Android)
+        {
+            if(Input.GetKey(KeyCode.Escape))
+            {
+                quitPanel.SetActive(true);
+            }
+        }
+        if(Shop.activeSelf == true)
+        {
+            if(weaponCt.activeSelf == false)
+            {
+                weaponButton.GetComponent<Image>().sprite = grayWeapon;
+                goldButton.GetComponent<Image>().sprite = originGold;
+            }
+            else if(statusCt.activeSelf == false)
+            {
+                goldButton.GetComponent<Image>().sprite = grayGold;
+                weaponButton.GetComponent<Image>().sprite = originWeapon;
+            }
+        }
     }
     public void OnClickStart()
     {
@@ -77,7 +102,17 @@ public class OnclickEvent : MonoSingleton<OnclickEvent>
     public void OnClickQuit()
     {
         ButtonaudioSource.PlayOneShot(buttonSound);
+        quitPanel.SetActive(true);
+    }
+    public void OnClickYes()
+    {
+        ButtonaudioSource.PlayOneShot(buttonSound);
         Application.Quit();
+    }
+    public void OnClickNo()
+    {
+        ButtonaudioSource.PlayOneShot(buttonSound);
+        quitPanel.SetActive(false);
     }
     public void OnClickShop()
     {
@@ -119,6 +154,7 @@ public class OnclickEvent : MonoSingleton<OnclickEvent>
     }
     public void OnClickRetry()
     {
+        Player.Instance.isFirstStart = false;
         ButtonaudioSource.PlayOneShot(buttonSound);
         isRestart = true;
         for (int i = 0; i < Player.Instance.backGroundSprite.Length; i++)
@@ -150,6 +186,7 @@ public class OnclickEvent : MonoSingleton<OnclickEvent>
     }
     public void OnClickLobby()
     {
+        Player.Instance.isFirstStart = false;
         ButtonaudioSource.PlayOneShot(buttonSound);
         for (int i = 0; i < Player.Instance.backGroundSprite.Length; i++)
         {
