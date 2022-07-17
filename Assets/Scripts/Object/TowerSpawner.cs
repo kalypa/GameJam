@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class TowerSpawner : MonoSingleton<TowerSpawner>
 {
@@ -17,15 +18,19 @@ public class TowerSpawner : MonoSingleton<TowerSpawner>
     public List<Boss> bossList = new List<Boss>(); //보스객체가 담아지는 리스트
     public bool isVertical = false;
     public bool isHorizontal = false;
-
+    public Sprite sword1;
+    public Sprite sword2;
+    public Sprite sword3;
+    public Sprite sword4;
     public void Spawn() //타워 생성 함수
     {
-        while(count < 4) // 10개 생성
+        while(count < 4) // 4개 생성
         {
             randomDir = Random.Range(1, 100);
             var tower = PoolManager.GetObject();
             towerList.Add(tower);
             slashDir = tower.GetComponentInChildren<SlashDir>();
+            SlashDirImageChange();
             var position = new Vector3(towerList[count].transform.position.x, towerList[count].transform.position.y + height); //타워 높이
             tower.transform.position += position;
             if (randomDir < 50)
@@ -46,6 +51,7 @@ public class TowerSpawner : MonoSingleton<TowerSpawner>
         var tower = PoolManager.GetObject();
         towerList.Add(tower);
         slashDir = tower.GetComponentInChildren<SlashDir>();
+        SlashDirImageChange();
         if (randomDir < 50)
         {
             slashDir.transform.eulerAngles = new Vector3(0, 0, 90); // 타워 방향 가로로
@@ -76,6 +82,25 @@ public class TowerSpawner : MonoSingleton<TowerSpawner>
                 slashDirs[i].transform.eulerAngles = new Vector3(0, 0, 0);
             }
             player.slashDirs[i] = slashDirs[i];
+        }
+    }
+    public void SlashDirImageChange()
+    {
+        if(GameManager.Instance.playerData.itemUseData[0] == true)
+        {
+            slashDir.GetComponent<SpriteRenderer>().sprite = sword1;
+        }
+        else if(GameManager.Instance.playerData.itemUseData[1] == true)
+        {
+            slashDir.GetComponent<SpriteRenderer>().sprite = sword2;
+        }
+        else if(GameManager.Instance.playerData.itemUseData[2] == true)
+        {
+            slashDir.GetComponent<SpriteRenderer>().sprite = sword3;
+        }
+        else if(GameManager.Instance.playerData.itemUseData[3] == true)
+        {
+            slashDir.GetComponent<SpriteRenderer>().sprite = sword4;
         }
     }
 }

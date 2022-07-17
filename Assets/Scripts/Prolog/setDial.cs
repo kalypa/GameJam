@@ -22,12 +22,16 @@ public class setDial : MonoBehaviour
     private Image FadeImage;
     [SerializeField]
     private GameObject loadingImage;
-
+    [SerializeField]
+    private GameObject quitPanel;
+    [SerializeField]
+    private AudioSource ButtonaudioSource;
+    [SerializeField]
+    private AudioClip buttonSound;
     public bool nowMent = false;
     public bool istyping;
     public bool isFirst;
     public float waitTime;
-
     void Start()
     {
         SetTyping();
@@ -49,8 +53,24 @@ public class setDial : MonoBehaviour
             }
             istyping = false;
         }
+        if (Application.platform == RuntimePlatform.Android)
+        {
+            if (Input.GetKey(KeyCode.Escape))
+            {
+                quitPanel.SetActive(true);
+            }
+        }
     }
-
+    public void OnClickYes()
+    {
+        ButtonaudioSource.PlayOneShot(buttonSound);
+        Application.Quit();
+    }
+    public void OnClickNo()
+    {
+        ButtonaudioSource.PlayOneShot(buttonSound);
+        quitPanel.SetActive(false);
+    }
     IEnumerator FadeandLoad()
     {
         FadeImage.DOFade(1f, 1f);

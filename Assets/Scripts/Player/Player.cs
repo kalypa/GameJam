@@ -47,7 +47,6 @@ public class Player : MonoSingleton<Player>
     public List<Gold> goldList;
     public Image lobbyPlayer;
     public SpriteRenderer[] backGroundSprite;
-    public int value = 1;
     public AudioSource gameOverSound;
     [SerializeField]
     private AudioClip gameOverClip;
@@ -56,7 +55,7 @@ public class Player : MonoSingleton<Player>
     public AudioClip[] backGroundClip;
     public AudioClip playerClip;
     public AudioClip goldClip;
-
+    private float originSize;
     public bool isChangeBack = false;
     public bool isFirstStart = false;
     void Awake()
@@ -66,10 +65,18 @@ public class Player : MonoSingleton<Player>
         dragManager.setOnSwipeDetected(MyOnSwipeDetected);
         CheckUse();
         isFirstStart = true;
+        originSize = Camera.main.orthographicSize;
     }
     void Update()
     {
         CheckUse();
+        if (Application.platform == RuntimePlatform.Android)
+        {
+            if (Input.GetKey(KeyCode.Escape))
+            {
+                OnclickEvent.Instance.quitPanel.SetActive(true);
+            }
+        }
     }
     void MyOnSwipeDetected(Vector3 swipeDirection) 
     {
@@ -234,7 +241,7 @@ public class Player : MonoSingleton<Player>
     }
     void AddGold()
     {
-        GameManager.Instance.playerData.playerMoney += value;
+        GameManager.Instance.playerData.playerMoney += GameManager.Instance.playerData.value;
         goldText.text = GameManager.Instance.playerData.playerMoney.ToString();
         goldEffect.GoldFade();
         goldText.text = GameManager.Instance.playerData.playerMoney.ToString();
@@ -346,7 +353,7 @@ public class Player : MonoSingleton<Player>
             {
                 RandomTower();
             }
-            stamina.Spd += 0.0008f;
+            stamina.Spd += 0.0005f;
         }
         else if(GameManager.Instance.playerData.itemUseData[2] == true)
         {
@@ -363,8 +370,8 @@ public class Player : MonoSingleton<Player>
                     RandomTower();
 
                 }
+                stamina.Spd += 0.001f;
             }
-            stamina.Spd += 0.001f;
         }
         else if (GameManager.Instance.playerData.itemUseData[3] == true)
         {
@@ -380,8 +387,8 @@ public class Player : MonoSingleton<Player>
                 {
                     RandomTower();
                 }
+                stamina.Spd += 0.002f;
             }
-            stamina.Spd += 0.002f;
         }
     }
     public void IdleState()
@@ -477,7 +484,7 @@ public class Player : MonoSingleton<Player>
         Time.timeScale = 0.4f;
         yield return new WaitForSeconds(0.1f);
         Time.timeScale = 1f;
-        Camera.main.orthographicSize = 5f;
+        Camera.main.orthographicSize = originSize;
         animator.speed = animator.speed / 3 * 5;
     }
 }

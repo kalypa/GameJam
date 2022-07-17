@@ -22,6 +22,7 @@ public class PlayerData
     public float sfxScale;
 
     public bool firstStart;
+    public int value = 1;
 }
 
 public class GameManager : MonoSingleton<GameManager>
