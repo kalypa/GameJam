@@ -178,10 +178,11 @@ public class ShopManager : MonoBehaviour
         if (GameManager.Instance.playerData.playerMoney >= playerStatusCoin)
         {
             Player.Instance.goldText.text = GameManager.Instance.playerData.playerMoney.ToString();
+            OnclickEvent.Instance.ButtonaudioSource.PlayOneShot(OnclickEvent.Instance.buyClip);
             GameManager.Instance.playerData.playerMoney -= playerStatusCoin;
             GameManager.Instance.playerData.statusLevel += 1;
             GameManager.Instance.Save();
-            Player.Instance.value += 1;
+            GameManager.Instance.playerData.value += 1;
             ShopUpdate();
         }
         else { }

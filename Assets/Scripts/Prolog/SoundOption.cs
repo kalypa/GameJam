@@ -32,8 +32,6 @@ public class SoundOption : MonoSingleton<SoundOption>
     {
         GameManager.Instance.playerData.bgmScale = bgmScaler.value;
         GameManager.Instance.playerData.sfxScale = sfxScaler.value;
-        Debug.Log(GameManager.Instance.playerData.bgmScale);
-        Debug.Log(GameManager.Instance.playerData.sfxScale);
 
         for(int i = 0; i<sfxSource.Length; i++)
         {

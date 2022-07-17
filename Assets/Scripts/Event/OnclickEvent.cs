@@ -45,16 +45,9 @@ public class OnclickEvent : MonoSingleton<OnclickEvent>
         settingPanel.SetActive(false);
         scorePanel.SetActive(false);
     }
-    private void Update()
+    void Update()
     {
         Player.Instance.goldText.text = GameManager.Instance.playerData.playerMoney.ToString();
-        if(Application.platform == RuntimePlatform.Android)
-        {
-            if(Input.GetKey(KeyCode.Escape))
-            {
-                quitPanel.SetActive(true);
-            }
-        }
         if(Shop.activeSelf == true)
         {
             if(weaponCt.activeSelf == false)
