@@ -1,0 +1,1 @@
+{"playerMoney":0,"highScore":0,"itemBuyData":[true,false,false,false],"itemUseData":[true,false,false,false],"statusLevel":0,"bgmScale":0.30000001192092898,"sfxScale":0.30000001192092898,"firstStart":false,"value":1}

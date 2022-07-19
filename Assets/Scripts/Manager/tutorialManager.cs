@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 using DG.Tweening;
 
 public class tutorialManager : MonoBehaviour
@@ -24,10 +25,16 @@ public class tutorialManager : MonoBehaviour
     [SerializeField]
     private GameObject clearfilter;
 
+    [Header("보스전 튜토리얼")]
+    [SerializeField]
+    private GameObject bossimage;
+
     [SerializeField]
     private GameObject dirSwordH;
     [SerializeField]
     private GameObject dirSwordV;
+
+    int PlayerTutorialNumber = 0;
 
     Vector3 horizontalObject;
     Vector3 verticalObject;
@@ -43,6 +50,7 @@ public class tutorialManager : MonoBehaviour
             horizontalObject = fingerObject.transform.position;
             verticalObject = fingerObject2.transform.position;
             clearfilter.SetActive(true);
+            bossimage.gameObject.SetActive(true);
             if (TowerSpawner.Instance.isHorizontal == true)
             {
                 dirSwordH.gameObject.SetActive(true);
@@ -63,15 +71,15 @@ public class tutorialManager : MonoBehaviour
 
         if (Input.anyKeyDown)
         {
-            tutorialCanvas.gameObject.SetActive(false);
             fingerObject.SetActive(false);
             fingerObject2.SetActive(false);
             dirSwordH.SetActive(false);
             dirSwordV.SetActive(false);
             tutorialText.gameObject.SetActive(false);
             One.SetActive(false);
-            clearfilter.SetActive(false);
             tutorialText2.gameObject.SetActive(false);
+            PlayerTutorialNumber++;
+            bossimage.gameObject.SetActive(false);
         }
     }
 
