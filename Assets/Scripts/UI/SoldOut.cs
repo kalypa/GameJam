@@ -19,11 +19,11 @@ public class SoldOut : MonoBehaviour
         {
             soldOut[0].SetActive(true);
         }
-        else if (GameManager.Instance.playerData.itemBuyData[2] == true)
+        if (GameManager.Instance.playerData.itemBuyData[2] == true)
         {
             soldOut[1].SetActive(true);
         }
-        else if (GameManager.Instance.playerData.itemBuyData[3] == true)
+        if (GameManager.Instance.playerData.itemBuyData[3] == true)
         {
             soldOut[2].SetActive(true);
         }

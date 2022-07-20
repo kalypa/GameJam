@@ -162,7 +162,6 @@ public class Player : MonoSingleton<Player>
         AtkTower();
         atkEffect.Effect();
         cameraShake.Shake();
-        staminaBar.value -= 0.2f;
         if(slashCount == 50 + 50 * bossCount)
         {
             towerSpawner.SpawnBoss();
@@ -340,6 +339,7 @@ public class Player : MonoSingleton<Player>
                 RandomTower();
             }
             stamina.Spd += 0.001f;
+            staminaBar.value -= 0.2f;
         }
         else if (GameManager.Instance.playerData.itemUseData[1] == true)
         {
@@ -354,6 +354,7 @@ public class Player : MonoSingleton<Player>
                 RandomTower();
             }
             stamina.Spd += 0.0005f;
+            staminaBar.value -= 0.2f;
         }
         else if(GameManager.Instance.playerData.itemUseData[2] == true)
         {
@@ -371,6 +372,7 @@ public class Player : MonoSingleton<Player>
 
                 }
                 stamina.Spd += 0.001f;
+                staminaBar.value -= 0.1f;
             }
         }
         else if (GameManager.Instance.playerData.itemUseData[3] == true)
@@ -388,6 +390,7 @@ public class Player : MonoSingleton<Player>
                     RandomTower();
                 }
                 stamina.Spd += 0.002f;
+                staminaBar.value -= 0.1f;
             }
         }
     }
