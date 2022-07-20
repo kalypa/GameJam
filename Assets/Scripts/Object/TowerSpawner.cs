@@ -24,7 +24,7 @@ public class TowerSpawner : MonoSingleton<TowerSpawner>
     public Sprite sword4;
     public void Spawn() //鸥况 积己 窃荐
     {
-        while(count < 5) // 4俺 积己
+        while(count < 4) // 4俺 积己
         {
             randomDir = Random.Range(1, 100);
             var tower = PoolManager.GetObject();
@@ -43,11 +43,6 @@ public class TowerSpawner : MonoSingleton<TowerSpawner>
         if(Player.Instance.isFirstStart == true)
         {
             towerList.Swap(3, 4);
-            towerList.Swap(4, 5);
-        }
-        else if (Player.Instance.isFirstStart == false)
-        {
-            towerList.Swap(4, 5);
         }
     }
     public void SpawnFirst()

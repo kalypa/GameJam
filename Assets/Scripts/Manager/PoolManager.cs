@@ -17,7 +17,7 @@ public class PoolManager : MonoSingleton<PoolManager>
     Queue<Boss> poolingBossQueue = new Queue<Boss>();     //보스 오브젝트를 풀링할 큐
     private void Awake()
     {
-        Initialize(6); //초기 생성 수
+        Initialize(4); //초기 생성 수
         EffectInitialize(1);
         BossInitialize(1);
     }
